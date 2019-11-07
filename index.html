@@ -29,7 +29,9 @@
             <button class="getMovies">Get JSON data</button>
             <button class="popularMovies">Get popular movies</button>
             <button class="latestMovies">Get latest movies</button>
+            <button class="topMovies">Get top rated</button>
 
+            <!-- IMDB Puani Giriniz:<input name=opacity type=number min=0 max=10 step=0.1> -->
             <div>
                     <tr>
                      
@@ -73,21 +75,30 @@
                     $(".latestMovies").click(function () {
 
                         $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
-                            debugger;
-                            var data = "";
-                            $.each(latest.results, function (key, value) {
-                                data += '<tr>';
-                                data += '<td>' + value.title + '</td>';
-                                data += '</tr>';
-                            });
-                            $('div').append(data);
+                            $("div").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
+
                         });
                     });
 
+                    $(".topMovies").click(function(){
+                       $.getJSON("https://api.themoviedb.org/3/movie/top_rated?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1" , function (topResults){
+                        debugger;
+                         var dataTopMovies = "";
+                         $.each(topResults.results , function (key,value){
+                            dataTopMovies += '<tr>';
+                            dataTopMovies += '<td>' + value.title + '</td>';
+                            dataTopMovies += '</tr>';
+                         });
+                         $('div').append(dataTopMovies);
+                       });
 
+                    });
+
+                    
                 });
 
 
+                
                 
         </script>
 
