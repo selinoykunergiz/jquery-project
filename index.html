@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <style>
+                table {
+                  font-family: arial, sans-serif;
+                  border-collapse: collapse;
+                  width: 100%;
+                }
+                
+                td, th {
+                  border: 1px solid #dddddd;
+                  text-align: left;
+                  padding: 8px;
+                }
+                
+                tr:nth-child(even) {
+                  background-color: #dddddd;
+                }
+                </style>
+    </head>
+
+    <body>
+
+        <table>
+            Film Adi Giriniz:<input type="text"/>
+            <button class="getMovies">Get JSON data</button>
+            <button class="popularMovies">Get popular movies</button>
+            <button class="latestMovies">Get latest movies</button>
+
+            <div>
+                    <tr>
+                     
+                    </tr>
+            </div>
+          
+        
+
+        </table>
+
+        <script>
+  
+            $(document).ready(function () {
+                    $(".getMovies").click(function () {
+
+                        var movieName = $("input").val();
+    
+                        $.getJSON("http://www.omdbapi.com/?t="+movieName+"&apikey=1f543ccf", function (result) {
+        
+                                $("div").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>');
+                                $("div").append('<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>');
+                                $("div").append('<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>');                          
+                
+                        });
+                    });
+
+                    $(".popularMovies").click(function () {
+
+                     $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
+                        debugger;
+                        var data = "";
+                        $.each(results.results, function (key, value) {
+                            data += '<tr>';
+                            data += '<td>' + value.title + '</td>';
+                            data += '</tr>';
+                        });
+                        $('div').append(data);
+                     });
+                    });
+
+                    $(".latestMovies").click(function () {
+
+                        $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
+                            debugger;
+                            var data = "";
+                            $.each(latest.results, function (key, value) {
+                                data += '<tr>';
+                                data += '<td>' + value.title + '</td>';
+                                data += '</tr>';
+                            });
+                            $('div').append(data);
+                        });
+                    });
+
+
+                });
+
+
+                
+        </script>
+
+    </body>
+</html>
