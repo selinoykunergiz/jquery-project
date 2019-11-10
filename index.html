@@ -31,9 +31,12 @@
                     debugger;
                     var data = "";
                     $.each(results.results, function (key, value) {
+
                         data += '<tr>';
                         data += '<td>' + value.title + '</td>';
+                        data += "<td><img src='http://image.tmdb.org/t/p/w185/"+value.poster_path+"' /></td>";
                         data += '</tr>';
+                        
                     });
                     $('.header').append(data);
                     $("html, body").animate({ scrollTop: $('.header').offset().top }, 1000);
