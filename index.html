@@ -1,106 +1,274 @@
 <!DOCTYPE html>
 <html>
     <head>
+        	
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel=”stylesheet” href=”style.css” type=”text/css”>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
+       
 
-        <style>
-                table {
-                  font-family: arial, sans-serif;
-                  border-collapse: collapse;
-                  width: 100%;
-                }
-                
-                td, th {
-                  border: 1px solid #dddddd;
-                  text-align: left;
-                  padding: 8px;
-                }
-                
-                tr:nth-child(even) {
-                  background-color: #dddddd;
-                }
-                </style>
-    </head>
-
-    <body>
-
-        <table>
-            Film Adi Giriniz:<input type="text"/>
-            <button class="getMovies">Get JSON data</button>
-            <button class="popularMovies">Get popular movies</button>
-            <button class="latestMovies">Get latest movies</button>
-            <button class="topMovies">Get top rated</button>
-
-            <!-- IMDB Puani Giriniz:<input name=opacity type=number min=0 max=10 step=0.1> -->
-            <div>
-                    <tr>
-                     
-                    </tr>
-            </div>
-          
-        
-
-        </table>
-
-        <script>
+<script>
   
-            $(document).ready(function () {
-                    $(".getMovies").click(function () {
+        $(document).ready(function () {
+                $(".getMovies").click(function () {
 
-                        var movieName = $("input").val();
+                    var movieName = $("input").val();
+
+                    $.getJSON("http://www.omdbapi.com/?t="+movieName+"&apikey=1f543ccf", function (result) {
     
-                        $.getJSON("http://www.omdbapi.com/?t="+movieName+"&apikey=1f543ccf", function (result) {
-        
-                                $("div").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>');
-                                $("div").append('<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>');
-                                $("div").append('<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>');                          
-                
-                        });
+                            $(".partFirst").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>');
+                            $(".partFirst").append('<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>');
+                            $(".partFirst").append('<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>');                          
+            
                     });
-
-                    $(".popularMovies").click(function () {
-
-                     $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
-                        debugger;
-                        var data = "";
-                        $.each(results.results, function (key, value) {
-                            data += '<tr>';
-                            data += '<td>' + value.title + '</td>';
-                            data += '</tr>';
-                        });
-                        $('div').append(data);
-                     });
-                    });
-
-                    $(".latestMovies").click(function () {
-
-                        $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
-                            $("div").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
-
-                        });
-                    });
-
-                    $(".topMovies").click(function(){
-                       $.getJSON("https://api.themoviedb.org/3/movie/top_rated?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1" , function (topResults){
-                        debugger;
-                         var dataTopMovies = "";
-                         $.each(topResults.results , function (key,value){
-                            dataTopMovies += '<tr>';
-                            dataTopMovies += '<td>' + value.title + '</td>';
-                            dataTopMovies += '</tr>';
-                         });
-                         $('div').append(dataTopMovies);
-                       });
-
-                    });
-
-                    
                 });
 
+                $(".popularMovies").click(function () {
+
+                 $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
+                    debugger;
+                    var data = "";
+                    $.each(results.results, function (key, value) {
+                        data += '<tr>';
+                        data += '<td>' + value.title + '</td>';
+                        data += '</tr>';
+                    });
+                    $('.header').append(data);
+                    $("html, body").animate({ scrollTop: $('.header').offset().top }, 1000);
+                 });
+                 
+                });
+
+               
+                $(".latestMovies").click(function () {
+
+                    $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
+                        $(".partThree").append('<tr>'+'<th>Film Adı'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
+
+                    });
+                });
+
+                $(".topMovies").click(function(){
+                   $.getJSON("https://api.themoviedb.org/3/movie/top_rated?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1" , function (topResults){
+                    debugger;
+                     var dataTopMovies = "";
+                     $.each(topResults.results , function (key,value){
+                        dataTopMovies += '<tr>';
+                        dataTopMovies += '<td>' + value.title + '</td>';
+                        dataTopMovies += '</tr>';
+                     });
+                     $('.partFour').append(dataTopMovies);
+                   });
+
+                });
 
                 
-                
-        </script>
+            });
+    </script>
 
-    </body>
+    <style>
+ 
+
+    .partFirstTop-x{
+    background-repeat: no-repeat;
+    background-image: url(http://klbtheme.com/movify/wp-content/uploads/revslider/home1/slider1.jpg);
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+    height: 100vh;
+    opacity: 1;
+    visibility: inherit;
+    z-index: 20;
+    /* position: absolute; */
+    filter: brightness(0.5);
+    opacity: 0.8;
+    float: left;
+    }   
+
+    .second-li1{
+    background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/aslankral.jpg);
+    background-size: cover;
+    background-position: center center;
+    width: 30%;
+    height: 50vh;
+    float: left;
+    margin-right: 1%;
+    }
+
+    .second-li2{
+    background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/joker.jpg);
+    background-size: cover;
+    background-position: center center;
+    width: 30%;
+    height: 50vh;
+    float: left;
+    margin-right: 1%;
+    }
+
+    .second-li3{
+    background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/terminator.jpg);
+    background-size: cover;
+    background-position: center center;
+    width: 30%;
+    height: 50vh;
+    float: left;
+    }
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    .partFirst{
+        /* width: 25%;
+        margin: 0 auto;
+        border: 1px solid white;
+        color: white;
+        position: relative;
+        margin-top: 40%; */
+        /* left: 40%; */
+        width: 25%;
+        margin: 0 auto;
+        border: 1px solid white;
+        color: white;
+        position: absolute;
+        margin-top: 40%;
+        left: 40%;
+    }
+   
+    .search{
+        padding: 10px;
+    }
+    
+    .partFirstTwo-x{
+        /* position: relative;
+        z-index: 12121212;
+        width: 59%;
+        margin: 0 auto; */
+        position: absolute;
+        z-index: 12121212;
+        width: 59%;
+        margin: 0 auto;
+        float: left;
+        left: 20%;
+    }
+    
+    .partTwo , .partThree{
+        float: left;
+        margin-right: 5%;
+    }
+    /* .partTwo , .partThree{
+        margin-top: 1%;
+    } */
+    .popularMovies , .latestMovies , .topMovies{
+        background-color:black; 
+        border: none;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 20px;
+        opacity: 0.6;
+    }
+   
+    .popularMovies:hover , .latestMovies:hover ,.topMovies:hover{
+        background-color: dimgrey; 
+        opacity: 0.5;
+       
+    }
+    .part-topMovies{
+        float: left;
+        height: 60vh;
+        width: 100%;
+    }
+    .second1-ul{
+    list-style-type:none; 
+    }
+
+    .second1{
+    width: 60%;
+    margin: 0 auto;
+    }
+
+    .header-topMovies{
+    width: 60%;
+    margin: 0 auto;
+    padding-left: 3%;
+    }
+
+    .header-topMovies h3{
+    color: #3e4555;
+    font-family: quicksand,sans-serif;
+    font-weight: 600;
+    font-size: 38px;
+    }
+    .allProject {
+        height: 100vh;
+    }
+    </style>
+
+</head>
+
+ <body>
+<div class="project">
+    <div class="allProject">
+    
+        <div class="partFirstTop">
+    
+            <div class="partFirstTop-x">
+                <div class="partFirst">
+                    <div class="search">
+                        Filmini Bul!<input class="searchMovies" type="text" />
+                        <button class="getMovies w3-margin-left fa fa-search"></button>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    
+        <div class="partFirstTwo">
+    
+            <div class="partFirstTwo-x">
+                <div class="partTwo">
+                    <button class="popularMovies">En Popüler Filmler</button>
+                </div>
+    
+                <div class="partThree">
+                    <button class="latestMovies">En Son Çıkan Filmler</button>
+                </div>
+    
+                <div class="partFour">
+                    <button class="topMovies">En Çok İzlenen Filmler</button>
+                </div>
+            </div>
+    
+        </div>
+   
+    </div>
+    
+   
+        <div class="header">
+            
+        </div>
+ 
+</div>
+     
+ </body>
 </html>
