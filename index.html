@@ -53,8 +53,8 @@
                 $(".latestMovies").click(function () {
 
                     $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
-                        $(".partThree").append('<tr>'+'<th>Film Adı'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
-
+                        $(".top").append('<tr>'+'<th>Film Adı'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
+                        $("html, body").animate({ scrollTop: $('.top').offset().top }, 1000);
                     });
                 });
 
@@ -63,11 +63,16 @@
                     debugger;
                      var dataTopMovies = "";
                      $.each(topResults.results , function (key,value){
-                        dataTopMovies += '<tr>';
-                        dataTopMovies += '<td>' + value.title + '</td>';
-                        dataTopMovies += '</tr>';
+                     
+                        dataTopMovies += '<ul>';
+                        dataTopMovies += "<li class=img-li><img src='http://image.tmdb.org/t/p/w185/"+value.poster_path+"' /></li>";
+                        dataTopMovies += '<li class="vote_average-li">'+'<p>IMDB:</p>' + value.vote_average + '</li>'; 
+                        dataTopMovies += '<li class="release_date-li">'+'<p>Film Tarihi:</p>' + value.release_date + '</li>'; 
+                        dataTopMovies += '</ul>';
                      });
-                     $('.partFour').append(dataTopMovies);
+                     $('.footer').append(dataTopMovies);
+                    $("html, body").animate({ scrollTop: $('.footer').offset().top }, 1000);
+
                    });
 
                 });
@@ -152,6 +157,58 @@
     opacity: 0.8;
     float: left;
     }   
+
+    .footer ul .overview-li p{
+        width: 20%;
+        float: left;
+        margin: 0;
+        font-size: 16px;
+        font-weight: bolder;
+    } 
+
+    .footer ul .overview-li {
+        text-align: justify;
+    } 
+    .footer ul .release_date-li p{
+        font-weight: bolder;
+        float: left;
+        margin: 0;
+    }
+
+    .footer ul .release_date-li {
+        margin-top: 1%;
+        width: 70%;
+        text-align: center;
+        margin: 0 auto;
+    }
+ 
+    .footer ul .vote_average-li {
+        margin-top: 1%;
+        width: 40%;
+        margin: 0 auto;
+    }
+
+    .footer ul .vote_average-li p{
+        width: 50%;
+        float: left;
+        margin: 0;
+        font-size: 15px;
+        font-weight: bolder;
+    }
+    .footer ul .title-li{
+        width: 60%;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bolder;
+    }
+
+    .footer ul .img-li{
+        margin: 0 auto;
+        width: 65%;
+        margin-bottom: 1%;
+        padding-top: 1%;
+    }
 
     .second-li1{
     background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/aslankral.jpg);
@@ -308,6 +365,21 @@
         padding-left: 0;
         /* float: left; */
     }
+
+    .footer{
+        width: 100%;
+        /* margin: 0 auto; */
+    }
+    
+    .footer ul{
+        list-style-type: none;
+        width: 20%;
+        margin: 0 auto;
+        border: 1px solid gray;
+        margin-top: 1%;
+        padding-left: 0;
+        /* float: left; */
+    }
     </style>
 
 </head>
@@ -348,11 +420,18 @@
         </div>
    
     </div>
+    <div class="top">
+
+    </div>
     
-   
-        <div class="header">
-           
-        </div>
+    <div class="header">
+
+    </div>
+
+    <div class="footer">
+
+    </div>
+
  
 </div>
      
