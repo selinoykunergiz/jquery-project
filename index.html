@@ -17,12 +17,15 @@
                     var movieName = $("input").val();
 
                     $.getJSON("http://www.omdbapi.com/?t="+movieName+"&apikey=1f543ccf", function (result) {
-    
-                            $(".partFirst").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>');
-                            $(".partFirst").append('<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>');
-                            $(".partFirst").append('<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>');                          
-            
+
+                            $(".searchMoviesTop").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>');
+                            $(".searchMoviesTop").append('<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>');
+                            $(".searchMoviesTop").append('<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>');                            
+                            $(".searchMoviesTop").append('<tr>'+'<th> Plot'+'</th>'+'<td>' + result.Plot + '</td>'+'</tr>');         
+                            // $(".searchMoviesTop").append('<tr>'+'<th> Poster'+'</th>'+'<td>'+'<img src='+'http://image.tmdb.org/t/p/w185/"+result.Poster+"'+'/>'+'</td>'+'</tr>');         
+
                     });
+                    $("html, body").animate({ scrollTop: $('.searchMoviesTop').offset().top }, 1000);
                 });
 
                 $(".popularMovies").click(function () {
@@ -380,6 +383,12 @@
         padding-left: 0;
         /* float: left; */
     }
+    .searchMoviesTop{
+        width: 60%;
+        margin: 0 auto;
+        margin-top: 1%;
+    }
+  
     </style>
 
 </head>
@@ -420,6 +429,11 @@
         </div>
    
     </div>
+
+    <div class="searchMoviesTop">
+
+    </div>
+
     <div class="top">
 
     </div>
