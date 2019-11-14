@@ -156,7 +156,6 @@
     visibility: inherit;
     z-index: 20;
     filter: brightness(0.5);
-    opacity: 0.8;
     float: left;
     }   
 
@@ -241,6 +240,18 @@
     float: left;
     }
 
+    .partLogo{
+        background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/129461.png);
+        width: 3.5%;
+        height: 8vh;
+        float: left;
+        background-size: 50px 50px;
+        margin-right: 20%;
+        margin-left: 5%;
+        background-repeat: no-repeat;
+    }
+    
+
     table {
         font-family: arial, sans-serif;
         border-collapse: collapse;
@@ -280,7 +291,7 @@
         width: 100%;
         margin: 0 auto;
         float: left;
-        left: 30%;
+        padding: .5rem 0rem;
     }
     
     .partTwo , .partThree{
@@ -296,7 +307,8 @@
         padding-right: .5rem;
         padding-left: .5rem;
         font-size: 16px;
-        color: white;
+        color: darkgray;
+        border-left: 3px solid black;
     }
    
     .popularMovies:hover , .latestMovies:hover ,.topMovies:hover{
@@ -411,6 +423,10 @@
         <div class="partFirstTwo">
     
             <div class="partFirstTwo-x">
+                <div class="partLogo">
+
+                </div>
+
                 <div class="partTwo">
                     <button class="popularMovies">En Popüler Filmler</button>
                 </div>
