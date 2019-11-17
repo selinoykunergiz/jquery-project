@@ -14,21 +14,28 @@
         $(document).ready(function () {
 
 
+
                 //en populer filmleri getirir
                 $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
                 var data = "";
+                var pagination = "";
+            
                 $.each(results.results, function (key, value) {
 
-                    data += '<ul>';
-                            data += "<li class=img-li><img src='http://image.tmdb.org/t/p/w185/" + value.poster_path + "' /></li>";
-                            data += '<li class="vote_average-li">' + '<p>IMDB:</p>' + value.vote_average + '</li>';
-                            data += '<li class="release_date-li">' + '<p>Film Tarihi:</p>' + value.release_date + '</li>';
-                            data += '</ul>';
+                            data += '<li>';
+                            data += "<div class=img-li><img src='http://image.tmdb.org/t/p/w185/" + value.poster_path + "' /></div>";
+                            data += '<div class="vote_average-li">' + '<p>IMDB:</p>' + value.vote_average + '</div>';
+                            data += '<div class="release_date-li">' + '<p>Film Tarihi:</p>' + value.release_date + '</div>';
+                            data += '</li>';
+
+                            pagination += '<li>'+ key +'</li>';
                     
                 });
                    $('.oyku').append(data);
+                   $('.triggers').append(pagination);
                 });
 
+                
                 //en son çıkan filmleri getirir
                 // $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
                 //         $(".top").append('<tr>'+'<th>Film Adı'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
@@ -124,33 +131,33 @@
 
     <style>
 
-    .header ul .release_date-li p{
+    .header li .release_date-li p{
         font-weight: bolder;
         float: left;
         margin: 0;
     }
 
-    .header ul .release_date-li {
+    .header li .release_date-li {
         margin-top: 1%;
         width: 70%;
         text-align: center;
         margin: 0 auto;
     }
  
-    .header ul .vote_average-li {
+    .header li .vote_average-li {
         margin-top: 1%;
         width: 40%;
         margin: 0 auto;
     }
 
-    .header ul .vote_average-li p{
+    .header li .vote_average-li p{
         width: 50%;
         float: left;
         margin: 0;
         font-size: 15px;
         font-weight: bolder;
     }
-    .header ul .title-li{
+    .header li .title-li{
         width: 60%;
         margin: 0 auto;
         text-align: center;
@@ -158,7 +165,7 @@
         font-weight: bolder;
     }
 
-    .header ul .img-li{
+    .header li .img-li{
         margin: 0 auto;
         /* width: 65%; */
         margin-bottom: 1%;
@@ -170,7 +177,7 @@
         width: 100%;
     }
    
-    .header ul .overview-li p{
+    .header li .overview-li p{
         width: 20%;
         float: left;
         margin: 0;
@@ -178,7 +185,7 @@
         font-weight: bolder;
     } 
 
-    .header ul .overview-li {
+    .header li .overview-li {
         text-align: justify;
     } 
 
@@ -393,7 +400,7 @@
         /* margin: 0 auto; */
     }
     
-    .header ul{
+    .header li{
         list-style-type: none;
         /* width: 20%; */
         margin: 0 auto;
@@ -436,11 +443,11 @@
     left: 85%;
     }
     .oyku{
-        width: 50%;
+        width: 100%;
         margin: 0 auto;
     }
     .ozkan{
-        width: 50%;
+        width: 100%;
         margin: 0 auto;
     }
     </style>
@@ -497,10 +504,15 @@
     </div>
     
     <div class="header">
-        <div class="oyku" >
+        <ul class="oyku" >
                 
-        </div>
-
+        </ul>
+        <ul class="triggers">
+                
+        </ul>
+             <span class="control prev">Prev</span>
+             <span class="control next">Next</span>
+             
     </div>
 
     <div class="footer">
