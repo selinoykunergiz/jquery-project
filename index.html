@@ -14,7 +14,7 @@
         $(document).ready(function () {
 
         
-           
+              
                 //en populer filmleri getirir
                 $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
                 var data = "";
@@ -80,7 +80,6 @@
                         timingRun = setInterval(function () { sliderTiming(); }, 5000);
                     }
                 });
-
                 
                 //en son çıkan filmleri getirir
                 // $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
@@ -169,27 +168,7 @@
                 });
 
                 $(".popularMovies").click(function () {
-
-                 $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
-                
-                    var data = "";
-                    $.each(results.results, function (key, value) {
-                        
-                     
-                        data += '<ul>';
-                        // data += '<li class="title-li">'+value.title + '</li>';
-                        data += "<li class=img-li><img src='http://image.tmdb.org/t/p/w185/"+value.poster_path+"' /></li>";
-                        // data += '<li class="overview-li">'+'<p>Film Açıklaması:</p>' + value.overview + '</li>';  
-                        data += '<li class="vote_average-li">'+'<p>IMDB:</p>' + value.vote_average + '</li>'; 
-                        data += '<li class="release_date-li">'+'<p>Film Tarihi:</p>' + value.release_date + '</li>'; 
-                        data += '</ul>';
-                
-                        
-                    });
-                    $('.images').append(data);
                     $("html, body").animate({ scrollTop: $('.images').offset().top }, 1000);
-                 });
-                 
                 });
 
                
@@ -202,26 +181,12 @@
                 });
 
                 $(".topMovies").click(function(){
-                   $.getJSON("https://api.themoviedb.org/3/movie/top_rated?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1" , function (topResults){
-                 
-                     var dataTopMovies = "";
-                     $.each(topResults.results , function (key,value){
-                     
-                        dataTopMovies += '<ul>';
-                        dataTopMovies += "<li class=img-li><img src='http://image.tmdb.org/t/p/w185/"+value.poster_path+"' /></li>";
-                        dataTopMovies += '<li class="vote_average-li">'+'<p>IMDB:</p>' + value.vote_average + '</li>'; 
-                        dataTopMovies += '<li class="release_date-li">'+'<p>Film Tarihi:</p>' + value.release_date + '</li>'; 
-                        dataTopMovies += '</ul>';
-                     });
-                     $('.ozkan').append(dataTopMovies);
                     $("html, body").animate({ scrollTop: $('.ozkan').offset().top }, 1000);
-
-                   });
-
                 });
 
                 
             });
+            
     </script>
 
     <style>
@@ -238,7 +203,6 @@
     font-family: 'Quicksand', sans-serif;
     font-weight: 600;
 }
-
 .mask .images{
     width: 5000px !important;
     padding-left: 0;
