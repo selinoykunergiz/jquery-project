@@ -154,10 +154,10 @@
                     var movieName = $("input").val();
                     $.getJSON("http://www.omdbapi.com/?t="+movieName+"&apikey=1f543ccf", function (result) {
                             $(".searchMoviesTop").addClass("border");
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>'+'</div');
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>'+'</div');
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>'+'</div');                            
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Plot'+'</th>'+'<td>' + result.Plot + '</td>'+'</tr>'+'</div');         
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"Film Yılı:"+' '+'</th>'+'<td>'+result.Year + '</td>'+'</tr>'+'</div');
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"Yazar:"+' '+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>'+'</div');
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"Oyuncular:"+' '+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>'+'</div');                            
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"İçerik:"+' '+'</th>'+'<td>' + result.Plot + '</td>'+'</tr>'+'</div');         
                             // $(".searchMoviesTop").append('<tr>'+'<th> Poster'+'</th>'+'<td>'+'<img src='+'http://image.tmdb.org/t/p/w185/"+result.Poster+"'+'/>'+'</td>'+'</tr>');         
 
                     });
@@ -187,6 +187,12 @@
     </script>
 
     <style>
+   .searchMoviesTop div{
+    font-size: 20px;
+    text-align: justify;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+   }
 .mask .maskHeader{
     margin: 0;
     font-size: 38px;
@@ -636,7 +642,7 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
     .searchMoviesTop{
     width: 58%;
     margin: 0 auto;
-    margin-top: 10%;
+    margin-top: 110px;
     padding: 15px;
     }
 
