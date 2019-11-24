@@ -12,11 +12,22 @@
 <script>
   
         $(document).ready(function () {
-              
+            
+           //fragman getirir
+           function getVideo(firstFRAGMANID){
+            $.getJSON("https://api.themoviedb.org/3/movie/"+firstFRAGMANID+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
+
+                $(".fragman").append("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
+
+                });
+           }
+                
                 //en populer filmleri getirir
                 $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
                 var data = "";
                 var pagination = "";
+                var firstFRAGMANID = results.results[0].id;
+                getVideo(firstFRAGMANID);
                 $.each(results.results, function (key, value) {
 
                             data += '<li>';
@@ -86,9 +97,11 @@
 
                 //en çok izlenen filmleri getirir
                 $.getJSON("https://api.themoviedb.org/3/movie/top_rated?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1" , function (topResults){
-                  
+                  debugger;
                      var dataTopMovies = "";
                         var pagination = "";
+                        
+
                      $.each(topResults.results , function (key,value){
                      
                         dataTopMovies += '<li>';
@@ -149,6 +162,8 @@
                     }
                    });
                    
+
+              
                 //arama yapılan filmleri getirir
                 $(".getMovies").click(function () {
                     var movieName = $("input").val();
@@ -170,12 +185,14 @@
 
                
                 $(".latestMovies").click(function () {
-
                     $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
-                        $(".top").append('<tr>'+'<th>Film Adı'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
+                        $(".top").addClass("border");
+                        $(".top").append('<div>'+'<tr>'+'<th>'+"Film Adı:"+" "+'</th>'+'<td>'+latest.title + '</td>'+'</tr>'+'</div');
                         $("html, body").animate({ scrollTop: $('.top').offset().top }, 1000);
                     });
                 });
+
+              
 
                 $(".topMovies").click(function(){
                     $("html, body").animate({ scrollTop: $('.ozkan').offset().top }, 1000);
@@ -214,6 +231,15 @@
 .footer .ozkan{
     width: 5000px !important;
     padding-left: 0;
+}
+
+.top{
+    width: 58%;
+    margin: 0 auto;
+    padding: 15px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
 }
 
 body {position:relative; font-size:14px; font-family:arial;}
@@ -645,6 +671,7 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
     margin: 0 auto;
     margin-top: 110px;
     padding: 15px;
+    margin-bottom: 10px;
     }
 
     .searchMovies{
@@ -741,6 +768,10 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
             <ul class="triggersfooter"></ul>
             <span class="control prev-footer">&#10094;</span>
             <span class="control next-footer">&#10095;</span>
+    </div>
+
+    <div class="fragman">
+
     </div>
 
 
