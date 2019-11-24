@@ -12,8 +12,6 @@
 <script>
   
         $(document).ready(function () {
-
-        
               
                 //en populer filmleri getirir
                 $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
@@ -150,17 +148,16 @@
                         timingRun = setInterval(function () { sliderTiming(); }, 5000);
                     }
                    });
-
+                   
+                //arama yapılan filmleri getirir
                 $(".getMovies").click(function () {
-
                     var movieName = $("input").val();
-
                     $.getJSON("http://www.omdbapi.com/?t="+movieName+"&apikey=1f543ccf", function (result) {
-
-                            $(".searchMoviesTop").append('<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>');
-                            $(".searchMoviesTop").append('<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>');
-                            $(".searchMoviesTop").append('<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>');                            
-                            $(".searchMoviesTop").append('<tr>'+'<th> Plot'+'</th>'+'<td>' + result.Plot + '</td>'+'</tr>');         
+                            $(".searchMoviesTop").addClass("border");
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Film Yili'+'</th>'+'<td>'+result.Year + '</td>'+'</tr>'+'</div');
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Writer'+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>'+'</div');
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Actors'+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>'+'</div');                            
+                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th> Plot'+'</th>'+'<td>' + result.Plot + '</td>'+'</tr>'+'</div');         
                             // $(".searchMoviesTop").append('<tr>'+'<th> Poster'+'</th>'+'<td>'+'<img src='+'http://image.tmdb.org/t/p/w185/"+result.Poster+"'+'/>'+'</td>'+'</tr>');         
 
                     });
@@ -234,6 +231,9 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
         background-color:#ccc; color:#000; padding:10px;
     }ul.triggersfooter li.selected {background-color:red; color:#000;}
 
+.border{
+    border: 1px solid grey;
+}
 
 .prev, .next{
   cursor: pointer;
@@ -516,15 +516,10 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
     }
     
     td, th {
-        border: 1px solid #dddddd;
         text-align: left;
-        padding: 8px;
     }
     
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-
+ 
     .partFirst{
     width: 100px;
     color: white;
@@ -639,9 +634,10 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
         float: left;
     }
     .searchMoviesTop{
-        width: 60%;
-        margin: 0 auto;
-        margin-top: 1%;
+    width: 58%;
+    margin: 0 auto;
+    margin-top: 10%;
+    padding: 15px;
     }
 
     .searchMovies{
@@ -678,9 +674,6 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
  <body>
 <div class="project">
     <div class="allProject">
-    
-       
-    
         <div class="partFirstTwo">
     
             <div class="partFirstTwo-x">
@@ -718,7 +711,7 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
         </div>
     </div>
 
-    <div class="searchMoviesTop">
+    <div class="searchMoviesTop" id="deneme1">
 
     </div>
 
