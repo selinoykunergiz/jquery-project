@@ -8,6 +8,8 @@
         <link rel=”stylesheet” href=”style.css” type=”text/css”>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
         <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 
 <script>
   
@@ -15,80 +17,98 @@
 
            //fragman getirir
            function getVideo(firstFRAGMANID){
-            $.getJSON("https://api.themoviedb.org/3/movie/"+firstFRAGMANID+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
-
-                $(".fragman").append("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
-
+                $.getJSON("https://api.themoviedb.org/3/movie/"+firstFRAGMANID+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
+                    $(".fragman").append("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
                 });
-           }
+            } 
+
+            
+             //footer için en populer filmleri getirir
+             $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
                 
+                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[0].poster_path + "' />" + results.results[0].title+ "</div>");
+                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[1].poster_path + "' />" + results.results[1].title+ "</div>");
+                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[2].poster_path + "' />" + results.results[2].title+ "</div>");
+                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[3].poster_path + "' />" + results.results[3].title+ "</div>");
+                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[4].poster_path + "' />" + results.results[4].title+ "</div>");
+            
+            });
                 //en populer filmleri getirir
-                $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
+            $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
                 var data = "";
                 var pagination = "";
                 var firstFRAGMANID = results.results[0].id;
                 getVideo(firstFRAGMANID);
+                
                 $.each(results.results, function (key, value) {
+                    // debugger;
+                    data += '<li>';
+                    data += "<div class=img-li><a href='#ex1' rel='modal:open'><img src='http://image.tmdb.org/t/p/w185/" + value.poster_path + "' /></a></div>";
+                    data += '<div class="vote_average-li"> <p>IMDB:</p>' + value.vote_average + '</div>';
+                    data += '<div class="release_date-li"><p>Film Tarihi:</p>' + value.release_date + '</div>';
+                    data += '<div><p>id:</p><div class="openModalDiv">' + value.id + '</div></div>';
 
-                            data += '<li>';
-                            data += "<div class=img-li><img src='http://image.tmdb.org/t/p/w185/" + value.poster_path + "' /></div>";
-                            data += '<div class="vote_average-li">' + '<p>IMDB:</p>' + value.vote_average + '</div>';
-                            data += '<div class="release_date-li">' + '<p>Film Tarihi:</p>' + value.release_date + '</div>';
-                            data += '</li>';
-                            pagination += '<li>'+ key +'</li>';
-       
-          
+                    data += '</li>';
+                    pagination += '<li>'+ key +'</li>';
                 });
-                    $('.images').append(data);
-                    $('.triggers').append(pagination);
-                    var triggers = $('ul.triggers li');
-                    var images = $('ul.images li');
-                    var lastElem = triggers.length - 1;
-                    var mask = $('.mask ul.images');
-                    var imgWidth = images.width();
-                    var target;
-                    var timingRun;
-                    triggers.first().addClass('selected');
-                    mask.css('width', imgWidth * (lastElem + 1) + 'px');
 
-                    function sliderResponse(target) {
-                        mask.stop(true, false).animate({ 'left': '-' + imgWidth * target + 'px' }, 300);
-                        triggers.removeClass('selected').eq(target).addClass('selected');
+                // debugger;
+                $(".openModalDiv").click(function(){
+                    alert("oyku");
+                });
+                 
+
+
+                $('.images').append(data);
+                $('.triggers').append(pagination);
+                var triggers = $('ul.triggers li');
+                var images = $('ul.images li');
+                var lastElem = triggers.length - 1;
+                var mask = $('.mask ul.images');
+                var imgWidth = images.width();
+                var target;
+                var timingRun;
+                triggers.first().addClass('selected');
+                mask.css('width', imgWidth * (lastElem + 1) + 'px');
+
+                function sliderResponse(target) {
+                    mask.stop(true, false).animate({ 'left': '-' + imgWidth * target + 'px' }, 300);
+                    triggers.removeClass('selected').eq(target).addClass('selected');
+                }
+
+                triggers.click(function () {
+                
+                    if (!$(this).hasClass('selected')) {
+                        target = $(this).index();
+                        sliderResponse(target);
+                        resetTiming();
                     }
-
-                    triggers.click(function () {
+                });
+                $('.next').click(function () {
                     
-                        if (!$(this).hasClass('selected')) {
-                            target = $(this).index();
-                            sliderResponse(target);
-                            resetTiming();
-                        }
-                    });
-                    $('.next').click(function () {
-                     
-                        target = $('.mask ul.triggers li.selected').index();
-                        target === lastElem ? target = 0 : target = target + 1;
-                        sliderResponse(target);
-                        resetTiming();
-                    });
-                    $('.prev').click(function () {
-                   
-                        target = $('.mask ul.triggers li.selected').index();
-                        lastElem = triggers.length - 1;
-                        target === 0 ? target = lastElem : target = target - 1;
-                        sliderResponse(target);
-                        resetTiming();
-                    });
-                    function sliderTiming() {
-                        target = $('ul.triggers li.selected').index();
-                        target === lastElem ? target = 0 : target = target + 1;
-                        sliderResponse(target);
-                    }
-                    function resetTiming() {
-                        clearInterval(timingRun);
-                        timingRun = setInterval(function () { sliderTiming(); }, 5000);
-                    }
+                    target = $('.mask ul.triggers li.selected').index();
+                    target === lastElem ? target = 0 : target = target + 1;
+                    sliderResponse(target);
+                    resetTiming();
                 });
+                $('.prev').click(function () {
+                
+                    target = $('.mask ul.triggers li.selected').index();
+                    lastElem = triggers.length - 1;
+                    target === 0 ? target = lastElem : target = target - 1;
+                    sliderResponse(target);
+                    resetTiming();
+                });
+                function sliderTiming() {
+                    target = $('ul.triggers li.selected').index();
+                    target === lastElem ? target = 0 : target = target + 1;
+                    sliderResponse(target);
+                }
+                function resetTiming() {
+                    clearInterval(timingRun);
+                    timingRun = setInterval(function () { sliderTiming(); }, 5000);
+                }
+            });
                 
                 //en son çıkan filmleri getirir
                 // $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
@@ -97,7 +117,6 @@
 
                 //en çok izlenen filmleri getirir
                 $.getJSON("https://api.themoviedb.org/3/movie/top_rated?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1" , function (topResults){
-                  debugger;
                      var dataTopMovies = "";
                         var pagination = "";
                         
@@ -105,7 +124,7 @@
                      $.each(topResults.results , function (key,value){
                      
                         dataTopMovies += '<li>';
-                        dataTopMovies += "<div class=img-li><img src='http://image.tmdb.org/t/p/w185/"+value.poster_path+"' /></div>";
+                        dataTopMovies += "<div class=img-li><a href='#ex1' rel='modal:open'><img src='http://image.tmdb.org/t/p/w185/"+value.poster_path+"' /></a></div>";
                         dataTopMovies += '<div class="vote_average-li">'+'<p>IMDB:</p>' + value.vote_average + '</div>'; 
                         dataTopMovies += '<div class="release_date-li">'+'<p>Film Tarihi:</p>' + value.release_date + '</div>'; 
                         dataTopMovies += '</li>';
@@ -197,6 +216,8 @@
                 $(".topMovies").click(function(){
                     $("html, body").animate({ scrollTop: $('.ozkan').offset().top }, 1000);
                 });
+
+                
 
                 
             });
@@ -710,6 +731,92 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
     ul.triggers{
         display: none;
     }
+    .nergiz{
+        width: 120px;
+    position: absolute;
+    font-size: 20px;
+    text-align: center;
+    background-color: white;
+    left: 0.6%;
+    bottom: -250px;
+    }
+
+    .footerSection{
+    background-color: #1F1E1E;
+    height: 55vh;
+    }
+
+    .groupOne{
+        color: white;
+        width: 25%;
+        font-size: 12px;
+    font-family: 'Quicksand', sans-serif;
+    padding-top: 4%;
+    float: left;
+    padding-left: 7%
+
+    }
+
+    .footerImg img{
+        width: 30px;
+        margin-right: 5px;
+    }
+
+    .footerImg{
+        margin-bottom:5%;
+    }
+
+.groupOne .topSection{
+    color: maroon;
+    font-weight: 600;
+    font-size: 17px;
+    margin-top: 0;
+}
+
+.groupTwo{
+    font-family: 'Quicksand', sans-serif;
+}
+.groupTwo p{
+    color: maroon;
+    font-weight: 600;
+    font-size: 17px;
+    margin-top: -4px;
+    /* text-align: center; */
+    width: 30%;
+    margin-left: 8%;
+}
+
+.groupTwo .topSection{
+    float: left;
+    margin-right: 10%;
+    margin-top: 0;
+}
+
+.groupTwo{
+    width: 25%;
+    float: left;
+    padding-top: 4%;
+    line-height: 2.2rem;
+    display: block;
+    list-style: none;
+}
+
+.groupTwo .topSection, .bottomSection {
+    list-style-type: none;
+}
+
+.groupTwo  .topSection li{
+    color: white;
+}
+
+.groupTwo .bottomSection li{
+    color: white;
+  
+}
+
+
+
+
     </style>
 
 </head>
@@ -764,10 +871,20 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
     
     <div class="mask">
             <p class="maskHeader">En Popüler Filmler</p>
-            <ul class="images" ></ul>
-            <ul class="triggers"></ul>
-            <span class="control prev">&#10094;</span>
-            <span class="control next">&#10095;</span>
+            <ul class="images" >
+                    <!-- Modal HTML embedded directly into document -->
+                    <div id="ex1" class="modal">
+                        <iframe src="https://www.youtube.com/embed/"+value.id+></iframe>
+                        <p>Thanks for clicking. That felt good.</p>
+                        <a href="#" rel="modal:close">Close</a>
+                    </div>
+                    
+                    <!-- Link to open the modal -->
+                    <p class="nergiz"></p>
+            </ul>
+                    <ul class="triggers"></ul>
+                    <span class="control prev">&#10094;</span>
+                    <span class="control next">&#10095;</span>
     </div>
 
     
@@ -783,9 +900,43 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
 
     </div>
 
+    <div class="footerSection">
 
+        <div class="groupOne">
 
+            <p class="topSection">En Popüler Filmler</p>
+                <div class="seeAllPopular">
+
+                </div>
+            <p class="bottomSection">>>En Popüler Filmleri Görüntüle</p>
         
+        </div>
+
+        <div class="groupTwo">
+            <p>Site Index</p>
+            <ul class="topSection">
+                <li>Home</li>
+                <li>Search</li>
+                <li>Coming Soon</li>
+                <li>Top 250 Movies</li>
+                <li>My IMDB</li>
+                <li>Tv Series</li>
+            </ul>
+
+            <ul class="bottomSection">
+                    <li>Discover</li>
+                    <li>Android App</li>
+                    <li>Iphone</li>
+                    <li>Windows Phone 7</li>
+                    <li>Advertising</li>
+                    <li>RSS</li>
+            </ul>
+        </div>
+
+        <div class="groupThree">
+        
+        </div>
+    </div>
 
  
 </div>
