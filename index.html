@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        	
+      
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel=”stylesheet” href=”style.css” type=”text/css”>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
         <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
-
 <script>
   
         $(document).ready(function () {
@@ -22,9 +19,10 @@
                 });
             } 
 
-            
+
              //footer için en populer filmleri getirir
              $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
+
                 
                 $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[0].poster_path + "' />" + results.results[0].title+ "</div>");
                 $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[1].poster_path + "' />" + results.results[1].title+ "</div>");
@@ -33,6 +31,7 @@
                 $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[4].poster_path + "' />" + results.results[4].title+ "</div>");
             
             });
+                
                 //en populer filmleri getirir
             $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
                 var data = "";
@@ -41,26 +40,25 @@
                 getVideo(firstFRAGMANID);
                 
                 $.each(results.results, function (key, value) {
-                    // debugger;
                     data += '<li>';
-                    data += "<div class=img-li><a href='#ex1' rel='modal:open'><img src='http://image.tmdb.org/t/p/w185/" + value.poster_path + "' /></a></div>";
+                    data += '<div class="img-li" id="'+ value.id +'" onclick="document.getElementById(\'id01\').style.display=\'block\'"><img src="http://image.tmdb.org/t/p/w185/' + value.poster_path + '" /></div>';
                     data += '<div class="vote_average-li"> <p>IMDB:</p>' + value.vote_average + '</div>';
                     data += '<div class="release_date-li"><p>Film Tarihi:</p>' + value.release_date + '</div>';
-                    data += '<div><p>id:</p><div class="openModalDiv">' + value.id + '</div></div>';
-
                     data += '</li>';
                     pagination += '<li>'+ key +'</li>';
                 });
 
-                // debugger;
-                $(".openModalDiv").click(function(){
-                    alert("oyku");
-                });
-                 
-
-
                 $('.images').append(data);
                 $('.triggers').append(pagination);
+
+                $('.img-li').click(function (e) {
+                    var id = $(this).attr('id');
+                    debugger;
+                    $.getJSON("https://api.themoviedb.org/3/movie/"+id+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
+                        $(".w3-iframe").html("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
+                    });
+                });
+                
                 var triggers = $('ul.triggers li');
                 var images = $('ul.images li');
                 var lastElem = triggers.length - 1;
@@ -70,6 +68,8 @@
                 var timingRun;
                 triggers.first().addClass('selected');
                 mask.css('width', imgWidth * (lastElem + 1) + 'px');
+                            // Get the modal
+                            var modal = document.getElementById("myModal");
 
                 function sliderResponse(target) {
                     mask.stop(true, false).animate({ 'left': '-' + imgWidth * target + 'px' }, 300);
@@ -123,8 +123,8 @@
 
                      $.each(topResults.results , function (key,value){
                      
-                        dataTopMovies += '<li>';
-                        dataTopMovies += "<div class=img-li><a href='#ex1' rel='modal:open'><img src='http://image.tmdb.org/t/p/w185/"+value.poster_path+"' /></a></div>";
+                        dataTopMovies += '<li>';  
+                        dataTopMovies += '<div class="img-li" id="'+ value.id +'" onclick="document.getElementById(\'id01\').style.display=\'block\'"><img src="http://image.tmdb.org/t/p/w185/' + value.poster_path + '" /></div>';
                         dataTopMovies += '<div class="vote_average-li">'+'<p>IMDB:</p>' + value.vote_average + '</div>'; 
                         dataTopMovies += '<div class="release_date-li">'+'<p>Film Tarihi:</p>' + value.release_date + '</div>'; 
                         dataTopMovies += '</li>';
@@ -132,6 +132,16 @@
                      });
                      $('.ozkan').append(dataTopMovies);
                      $('.triggersfooter').append(pagination);
+
+
+                     $('.img-li').click(function (e) {
+                    var id = $(this).attr('id');
+                    debugger;
+                    $.getJSON("https://api.themoviedb.org/3/movie/"+id+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
+                        $(".w3-iframe").html("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
+                    });
+                    });
+                
                     var triggersfooter = $('ul.triggersfooter li');
                     var ozkan = $('ul.ozkan li');
                     var lastElem = triggersfooter.length - 1;
@@ -216,12 +226,9 @@
                 $(".topMovies").click(function(){
                     $("html, body").animate({ scrollTop: $('.ozkan').offset().top }, 1000);
                 });
-
-                
-
-                
             });
-            
+
+    
     </script>
 
     <style>
@@ -780,7 +787,7 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
 .groupFive {
     width: 25%;
     float: left;
-    margin-top: 6%;
+    margin-top: 7%;
 }
 .groupFive h1{ 
     width: 42%;
@@ -852,6 +859,44 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
 .footer-end{
     border-bottom: 1px solid grey;
 }
+
+.images .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.images .modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.images .close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
     </style>
 
 </head>
@@ -907,16 +952,10 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
     <div class="mask">
             <p class="maskHeader">En Popüler Filmler</p>
             <ul class="images" >
-                    <!-- Modal HTML embedded directly into document -->
-                    <div id="ex1" class="modal">
-                        <iframe src="https://www.youtube.com/embed/"+value.id+></iframe>
-                        <p>Thanks for clicking. That felt good.</p>
-                        <a href="#" rel="modal:close">Close</a>
-                    </div>
-                    
-                    <!-- Link to open the modal -->
-                    <p class="nergiz"></p>
+                   
             </ul>
+              <!-- Trigger/Open The Modal -->
+   
                     <ul class="triggers"></ul>
                     <span class="control prev">&#10094;</span>
                     <span class="control next">&#10095;</span>
@@ -984,7 +1023,17 @@ ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
         </div>
     </div>
 
- 
+    <div class="w3-container">
+        <div id="id01" class="w3-modal">
+            <div class="w3-modal-content">
+                <div class="w3-container">
+                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                    <div class="w3-iframe"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
      
  </body>
