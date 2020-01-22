@@ -1,1040 +1,156 @@
 <!DOCTYPE html>
 <html>
-    <head>
-      
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel=”stylesheet” href=”style.css” type=”text/css”>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
-        <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
-<script>
-  
-        $(document).ready(function () {
 
-           //fragman getirir
-           function getVideo(firstFRAGMANID){
-                $.getJSON("https://api.themoviedb.org/3/movie/"+firstFRAGMANID+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
-                    $(".fragman").append("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
-                });
-            } 
-
-
-             //footer için en populer filmleri getirir
-             $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
-
-                
-                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[0].poster_path + "' />" + results.results[0].title+ "</div>");
-                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[1].poster_path + "' />" + results.results[1].title+ "</div>");
-                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[2].poster_path + "' />" + results.results[2].title+ "</div>");
-                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[3].poster_path + "' />" + results.results[3].title+ "</div>");
-                $(".seeAllPopular").append( "<div class=footerImg><img src='http://image.tmdb.org/t/p/w185/" +  results.results[4].poster_path + "' />" + results.results[4].title+ "</div>");
-            
-            });
-                
-                //en populer filmleri getirir
-            $.getJSON("https://api.themoviedb.org/3/movie/popular?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1", function (results) {
-                var data = "";
-                var pagination = "";
-                var firstFRAGMANID = results.results[0].id;
-                getVideo(firstFRAGMANID);
-                
-                $.each(results.results, function (key, value) {
-                    data += '<li>';
-                    data += '<div class="img-li" id="'+ value.id +'" onclick="document.getElementById(\'id01\').style.display=\'block\'"><img src="http://image.tmdb.org/t/p/w185/' + value.poster_path + '" /></div>';
-                    data += '<div class="vote_average-li"> <p>IMDB:</p>' + value.vote_average + '</div>';
-                    data += '<div class="release_date-li"><p>Film Tarihi:</p>' + value.release_date + '</div>';
-                    data += '</li>';
-                    pagination += '<li>'+ key +'</li>';
-                });
-
-                $('.images').append(data);
-                $('.triggers').append(pagination);
-
-                $('.img-li').click(function (e) {
-                    var id = $(this).attr('id');
-                    debugger;
-                    $.getJSON("https://api.themoviedb.org/3/movie/"+id+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
-                        $(".w3-iframe").html("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
-                    });
-                });
-                
-                var triggers = $('ul.triggers li');
-                var images = $('ul.images li');
-                var lastElem = triggers.length - 1;
-                var mask = $('.mask ul.images');
-                var imgWidth = images.width();
-                var target;
-                var timingRun;
-                triggers.first().addClass('selected');
-                mask.css('width', imgWidth * (lastElem + 1) + 'px');
-                            // Get the modal
-                            var modal = document.getElementById("myModal");
-
-                function sliderResponse(target) {
-                    mask.stop(true, false).animate({ 'left': '-' + imgWidth * target + 'px' }, 300);
-                    triggers.removeClass('selected').eq(target).addClass('selected');
-                }
-
-                triggers.click(function () {
-                
-                    if (!$(this).hasClass('selected')) {
-                        target = $(this).index();
-                        sliderResponse(target);
-                        resetTiming();
-                    }
-                });
-                $('.next').click(function () {
-                    
-                    target = $('.mask ul.triggers li.selected').index();
-                    target === lastElem ? target = 0 : target = target + 1;
-                    sliderResponse(target);
-                    resetTiming();
-                });
-                $('.prev').click(function () {
-                
-                    target = $('.mask ul.triggers li.selected').index();
-                    lastElem = triggers.length - 1;
-                    target === 0 ? target = lastElem : target = target - 1;
-                    sliderResponse(target);
-                    resetTiming();
-                });
-                function sliderTiming() {
-                    target = $('ul.triggers li.selected').index();
-                    target === lastElem ? target = 0 : target = target + 1;
-                    sliderResponse(target);
-                }
-                function resetTiming() {
-                    clearInterval(timingRun);
-                    timingRun = setInterval(function () { sliderTiming(); }, 5000);
-                }
-            });
-                
-                //en son çıkan filmleri getirir
-                // $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
-                //         $(".top").append('<tr>'+'<th>Film Adı'+'</th>'+'<td>'+latest.title + '</td>'+'</tr>');
-                // });
-
-                //en çok izlenen filmleri getirir
-                $.getJSON("https://api.themoviedb.org/3/movie/top_rated?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR&page=1" , function (topResults){
-                     var dataTopMovies = "";
-                        var pagination = "";
-                        
-
-                     $.each(topResults.results , function (key,value){
-                     
-                        dataTopMovies += '<li>';  
-                        dataTopMovies += '<div class="img-li" id="'+ value.id +'" onclick="document.getElementById(\'id01\').style.display=\'block\'"><img src="http://image.tmdb.org/t/p/w185/' + value.poster_path + '" /></div>';
-                        dataTopMovies += '<div class="vote_average-li">'+'<p>IMDB:</p>' + value.vote_average + '</div>'; 
-                        dataTopMovies += '<div class="release_date-li">'+'<p>Film Tarihi:</p>' + value.release_date + '</div>'; 
-                        dataTopMovies += '</li>';
-                        pagination += '<li>'+ key +'</li>'; 
-                     });
-                     $('.ozkan').append(dataTopMovies);
-                     $('.triggersfooter').append(pagination);
-
-
-                     $('.img-li').click(function (e) {
-                    var id = $(this).attr('id');
-                    debugger;
-                    $.getJSON("https://api.themoviedb.org/3/movie/"+id+"/videos?api_key=ff1a4244972c231af758c476c641ca0f", function (resultsFragman) {
-                        $(".w3-iframe").html("<iframe src='https://www.youtube.com/embed/"+resultsFragman.results[0].key+"'></iframe>");
-                    });
-                    });
-                
-                    var triggersfooter = $('ul.triggersfooter li');
-                    var ozkan = $('ul.ozkan li');
-                    var lastElem = triggersfooter.length - 1;
-                    var footer = $('.footer ul.ozkan');
-                    var imgWidth = ozkan.width();
-                    var target;
-                    var timingRun;
-                    triggersfooter.first().addClass('selected');
-                    footer.css('width', imgWidth * (lastElem + 1) + 'px');
-
-                    function sliderResponse(target) {
-                        footer.stop(true, false).animate({ 'left': '-' + imgWidth * target + 'px' }, 300);
-                        triggersfooter.removeClass('selected').eq(target).addClass('selected');
-                    }
-
-                    triggersfooter.click(function () {
-                    
-                        if (!$(this).hasClass('selected')) {
-                            target = $(this).index();
-                            sliderResponse(target);
-                            resetTiming();
-                        }
-                    });
-                    $('.next-footer').click(function () {
-                     
-                        target = $('.footer ul.triggersfooter li.selected').index();
-                        target === lastElem ? target = 0 : target = target + 1;
-                        sliderResponse(target);
-                        resetTiming();
-                    });
-                    $('.prev-footer').click(function () {
-                   
-                        target = $('.footer ul.triggersfooter li.selected').index();
-                        lastElem = triggersfooter.length - 1;
-                        target === 0 ? target = lastElem : target = target - 1;
-                        sliderResponse(target);
-                        resetTiming();
-                    });
-                    function sliderTiming() {
-                        target = $('ul.triggersfooter li.selected').index();
-                        target === lastElem ? target = 0 : target = target + 1;
-                        sliderResponse(target);
-                    }
-                    function resetTiming() {
-                        clearInterval(timingRun);
-                        timingRun = setInterval(function () { sliderTiming(); }, 5000);
-                    }
-                   });
-                   
-
-              
-                //arama yapılan filmleri getirir
-                $(".getMovies").click(function () {
-                    var movieName = $("input").val();
-                    $.getJSON("http://www.omdbapi.com/?t="+movieName+"&apikey=1f543ccf", function (result) {
-                            $(".searchMoviesTop").addClass("border");
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"Film Yılı:"+' '+'</th>'+'<td>'+result.Year + '</td>'+'</tr>'+'</div');
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"Yazar:"+' '+'</th>'+'<td>' + result.Writer + '</td>'+'</tr>'+'</div');
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"Oyuncular:"+' '+'</th>'+'<td>' + result.Actors + '</td>'+'</tr>'+'</div');                            
-                            $(".searchMoviesTop").append('<div>'+'<tr>'+'<th>'+"İçerik:"+' '+'</th>'+'<td>' + result.Plot + '</td>'+'</tr>'+'</div');         
-                            // $(".searchMoviesTop").append('<tr>'+'<th> Poster'+'</th>'+'<td>'+'<img src='+'http://image.tmdb.org/t/p/w185/"+result.Poster+"'+'/>'+'</td>'+'</tr>');         
-
-                    });
-                    $("html, body").animate({ scrollTop: $('.searchMoviesTop').offset().top }, 1000);
-                });
-
-                $(".popularMovies").click(function () {
-                    $("html, body").animate({ scrollTop: $('.images').offset().top }, 1000);
-                });
-
-               
-                $(".latestMovies").click(function () {
-                    $.getJSON("https://api.themoviedb.org/3/movie/latest?api_key=ff1a4244972c231af758c476c641ca0f&language=tr-TR", function (latest) {
-                        $(".top").addClass("border");
-                        $(".top").append('<div>'+'<tr>'+'<th>'+"Film Adı:"+" "+'</th>'+'<td>'+latest.title + '</td>'+'</tr>'+'</div');
-                        $("html, body").animate({ scrollTop: $('.top').offset().top }, 1000);
-                    });
-                });
-
-              
-
-                $(".topMovies").click(function(){
-                    $("html, body").animate({ scrollTop: $('.ozkan').offset().top }, 1000);
-                });
-            });
-
-    
-    </script>
-
-    <style>
-        .fragman{
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        iframe{
-            width: 100%;
-            height: 50vh;
-        }
-   .searchMoviesTop div{
-    font-size: 20px;
-    text-align: justify;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-   }
-.mask .maskHeader{
-    margin: 0;
-    font-size: 38px;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-}
-
-.footer .footerHeader{
-    margin: 0;
-    font-size: 38px;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-}
-.mask .images{
-    width: 5000px !important;
-    padding-left: 0;
-}
-
-.footer .ozkan{
-    width: 5000px !important;
-    padding-left: 0;
-}
-
-.top{
-    width: 58%;
-    margin: 0 auto;
-    padding: 15px;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    font-size: 20px;
-}
-
-body {position:relative; font-size:14px; font-family:arial;}
-.mask {  overflow:hidden;  }
-ul.images { position:relative; top:0px;left:0px; }
-ul.images li { float:left; }
-
-ul.triggers { position:absolute; top:310px; left:80px; }
-    ul.triggers li { 
-        float:left; margin:0 5px; font: bold 16px arial; cursor:pointer;
-        background-color:#ccc; color:#000; padding:10px;
-    }ul.triggers li.selected {background-color:red; color:#000;}
-
-    .footer {  overflow:hidden;  }
-ul.ozkan { position:relative; top:0px;left:0px; }
-ul.ozkan li { float:left; }
-
-ul.triggersfooter { position:absolute; top:310px; left:80px; display:none;}
-    ul.triggersfooter li { 
-        float:left; margin:0 5px; font: bold 16px arial; cursor:pointer;
-        background-color:#ccc; color:#000; padding:10px;
-    }ul.triggersfooter li.selected {background-color:red; color:#000;}
-
-.border{
-    border: 1px solid grey;
-}
-
-.prev, .next{
-  cursor: pointer;
-  position: relative;
-  width: auto;
-  margin-top: -22px;
-  padding: 16px;
-  color: black;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
-  margin-top: 100px;
-}
-
-.prev-footer, .next-footer{
-  cursor: pointer;
-  position: relative;
-  width: auto;
-  margin-top: -22px;
-  padding: 16px;
-  color: black;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
-  margin-top: 100px;
-}
-
-/* Position the "next button" to the right */
-.next {
-  right: -50%;
-  border-radius: 3px 0 0 3px;
-  position: relative;
-}
-
-.next-footer {
-  right: -50%;
-  border-radius: 3px 0 0 3px;
-  position: relative;
-}
-.prev{
-    left: 50%;
-    border-radius: 3px 0 0 3px;
-    position: relative;
-}
-
-.prev-footer{
-    left: 50%;
-    border-radius: 3px 0 0 3px;
-    position: relative;
-}
-/* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.8);
-}
-
-.prev-footer:hover, .next-footer:hover {
-  background-color: rgba(0,0,0,0.8);
-}
-    .mask li .release_date-li p{
-        font-weight: bolder;
-        float: left;
-        margin: 0;
-    }
-
-    .ozkan li .release_date-li p{
-        font-weight: bolder;
-        float: left;
-        margin: 0;
-    }
-
-    .mask li .release_date-li {
-        margin-top: 1%;
-        width: 80%;
-        text-align: center;
-        margin: 0 auto;
-    }
- 
-    .ozkan li .release_date-li {
-        margin-top: 1%;
-        width: 80%;
-        text-align: center;
-        margin: 0 auto;
-    }
-
-    .mask li .vote_average-li {
-        margin-top: 1%;
-        width: 70%;
-        margin: 0 auto;
-    }
-
-    .ozkan li .vote_average-li{
-        margin-top: 1%;
-        width: 70%;
-        margin: 0 auto;
-    }
-
-    .mask li .vote_average-li p{
-        width: 50%;
-        float: left;
-        margin: 0;
-        font-size: 15px;
-        font-weight: bolder;
-    }
-
-    .ozkan li .vote_average-li p{
-        width: 50%;
-        float: left;
-        margin: 0;
-        font-size: 15px;
-        font-weight: bolder;
-    }
-
-    .mask li .title-li{
-        width: 60%;
-        margin: 0 auto;
-        text-align: center;
-        font-size: 20px;
-        font-weight: bolder;
-    }
-
-    .ozkan li .title-li{
-        width: 60%;
-        margin: 0 auto;
-        text-align: center;
-        font-size: 20px;
-        font-weight: bolder;
-    }
-
-    .mask li .img-li{
-        margin: 0 auto;
-        /* width: 65%; */
-        margin-bottom: 1%;
-        padding-top: 1%;
-    }
-
-    .ozkan li .img-li{
-        margin: 0 auto;
-        /* width: 65%; */
-        margin-bottom: 1%;
-        padding-top: 1%;
-    }
-
-    .img-li img{
-        height: 30vh;
-        width: 100%;
-    }
-   
-    .mask li .overview-li p{
-        width: 20%;
-        float: left;
-        margin: 0;
-        font-size: 16px;
-        font-weight: bolder;
-    } 
-
-    .ozkan li .overview-li p{
-        width: 20%;
-        float: left;
-        margin: 0;
-        font-size: 16px;
-        font-weight: bolder;
-    } 
-
-    .mask li .overview-li {
-        text-align: justify;
-    } 
-
-    .ozkan li .overview-li{
-        text-align: justify;
-    } 
-    .partFirstTop-x{
-    background-repeat: no-repeat;
-    background-image: url(http://klbtheme.com/movify/wp-content/uploads/revslider/home1/slider1.jpg);
-    background-size: cover;
-    background-position: center center;
-    width: 100%;
-    height: 100vh;
-    opacity: 1;
-    visibility: inherit;
-    z-index: 20;
-    filter: brightness(0.5);
-    float: left;
-    }   
-
-    /* .footer ul .overview-li p{
-        float: left;
-        margin: 0;
-        font-size: 16px;
-        font-weight: bolder;
-    } 
-
-    .footer ul .overview-li {
-        text-align: justify;
-    } 
-    .footer ul .release_date-li p{
-        font-weight: bolder;
-        float: left;
-        margin: 0;
-    }
-
-    .footer ul .release_date-li {
-        margin-top: 1%;
-        text-align: center;
-        margin: 0 auto;
-    }
- 
-    .footer ul .vote_average-li {
-        margin-top: 1%;
-        margin: 0 auto;
-    }
-
-    .footer ul .vote_average-li p{
-        width: 50%;
-        float: left;
-        margin: 0;
-        font-size: 15px;
-        font-weight: bolder;
-    }
-    .footer ul .title-li{
-        margin: 0 auto;
-        text-align: center;
-        font-size: 20px;
-        font-weight: bolder;
-    }
-
-    .footer ul .img-li{
-        margin: 0 auto;
-        margin-bottom: 1%;
-        padding-top: 1%;
-    } */
-
-    .second-li1{
-    background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/aslankral.jpg);
-    background-size: cover;
-    background-position: center center;
-    width: 30%;
-    height: 50vh;
-    float: left;
-    margin-right: 1%;
-    }
-
-    .second-li2{
-    background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/joker.jpg);
-    background-size: cover;
-    background-position: center center;
-    width: 30%;
-    height: 50vh;
-    float: left;
-    margin-right: 1%;
-    }
-
-    .second-li3{
-    background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/terminator.jpg);
-    background-size: cover;
-    background-position: center center;
-    width: 30%;
-    height: 50vh;
-    float: left;
-    }
-
-    .partLogo{
-        background-image: url(/Users/selinoyku/Desktop/jquery-project/photos/129461.png);
-        width: 100px;
-        height: 6vh;
-        float: left;
-        background-size: 50px 50px;
-        margin-left: 5%;
-        background-repeat: no-repeat;
-    }
-    
-
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-    
-    td, th {
-        text-align: left;
-    }
-    
- 
-    .partFirst{
-    width: 100px;
-    color: white;
-    font-size: 17px;
-    font-weight: bolder;
-    position: relative;
-    float: left;
-    }
-   
-    .search{
-        margin-top: 9px;
-        text-align: center;
-    }
-    
-    .partFirstTwo-x{
-    width: 100%;
-    margin: 0 auto;
-    float: right;
-    padding: .5rem 0rem;
-    }
-    
-    .partTwo , .partThree, .partFour{
-        float: right;
-    }
-
-    .popularMovies , .latestMovies , .topMovies{
-        background-color: transparent;
-        border: 0;
-        padding-right: 2.5rem;
-        padding-left: .5rem;
-        font-size: 16px;
-        color: black;
-        /* border-left: 3px solid black; */
-        margin-top: 7%;
-        font-family: 'Quicksand', sans-serif;
-        font-weight: 600;
-        text-align: center;
-    }
-   
-    .popularMovies:hover , .latestMovies:hover ,.topMovies:hover{
-        color: darkred; 
-        background-color: #e0e0e0;
-    }
-    .part-topMovies{
-        float: left;
-        height: 60vh;
-        width: 100%;
-    }
-    .second1-ul{
-    list-style-type:none; 
-    }
-
-    .second1{
-    width: 60%;
-    margin: 0 auto;
-    }
-
-    .header-topMovies{
-    width: 60%;
-    margin: 0 auto;
-    padding-left: 3%;
-    }
-
-    .header-topMovies h3{
-    color: #3e4555;
-    font-family: quicksand,sans-serif;
-    font-weight: 600;
-    font-size: 38px;
-    }
-
-    .allProject {
-        height: 100vh;
-    }
-
-    .partFirstTwo{
-        height: 10vh;
-    }
-
-    .mask{
-        width: 100%; max-width: 1100px; margin: 0 auto; position: relative;
-        /* margin: 0 auto; */
-    }
-    .footer{
-        width: 100%; max-width: 1100px; margin: 0 auto; position: relative;
-        /* margin: 0 auto; */
-    }
-    .mask .release_date-li{
-        list-style-type: none;
-        /* width: 20%; */
-        margin: 0 auto;
-        /* border: 1px solid gray; */
-        padding-left: 0;
-        float: left;
-    }
-
-    .footer li{
-        list-style-type: none;
-        /* width: 20%; */
-        margin: 0 auto;
-        /* border: 1px solid gray; */
-        padding-left: 0;
-    }
-    /* .footer{
-        width: 100%;
-        float: left;
-    }
-     */
-    .footer ul{
-        list-style-type: none;
-        /* margin: 0 auto; */
-        /* margin-top: 1%; */
-     /* padding-left: 0;  */
-        float: left;
-    }
-    .searchMoviesTop{
-    width: 58%;
-    margin: 0 auto;
-    margin-top: 110px;
-    padding: 15px;
-    margin-bottom: 10px;
-    }
-
-    .searchMovies{
-        width: 100px;
-        font-size: 15px;
-        font-family: 'Quicksand', sans-serif;
-        padding-left: 9px;
-    }
-
-    .getMovies{
-    border: 0;
-    padding: 0;
-    position: absolute;
-    top: 13px;
-    left: 61%;
-    }
-
-    .images{
-        width: 100%;
-        margin: 0 auto;
-    }
-    .ozkan{
-        width: 100%;
-        /* margin: 0 auto; */
-    }
-
-    ul.triggers{
-        display: none;
-    }
-    .nergiz{
-        width: 120px;
-    position: absolute;
-    font-size: 20px;
-    text-align: center;
-    background-color: white;
-    left: 0.6%;
-    bottom: -250px;
-    }
-
-    .footerSection{
-    background-color: #1F1E1E;
-    height: 45vh;
-    }
-
-    .groupOne{
-        color: white;
-        width: 25%;
-        font-size: 12px;
-    font-family: 'Quicksand', sans-serif;
-    padding-top: 2%;
-    float: left;
-    padding-left: 7%
-
-    }
-
-    .footerImg img{
-        width: 30px;
-        margin-right: 15px;
-    }
-
-    .footerImg{
-        margin-bottom:5%;
-    }
-
-.groupOne .topSection{
-    color: maroon;
-    font-weight: 600;
-    font-size: 17px;
-    margin-top: 0;
-}
-
-.groupTwo , .groupThree{
-    font-family: 'Quicksand', sans-serif;
-}
-
-.groupFive {
-    width: 25%;
-    float: left;
-    margin-top: 7%;
-}
-.groupFive h1{ 
-    width: 42%;
-    margin-top: 54%;
-    margin-right: 40px;
-    float: right;
-    color: white;
-    font-size: 12px;
-    font-family: 'Quicksand', sans-serif;
-    border-left: 1px solid grey;
-
-}
-.groupTwo p{
-    color: maroon;
-    font-weight: 600;
-    font-size: 17px;
-    margin-top: -4px;
-    /* text-align: center; */
-    width: 30%;
-    margin-left: 8%;
-}
-
-.groupThree .titleTop{
-    color: maroon;
-}
-
-.groupTwo .topSection{
-    float: left;
-    margin-right: 20%;
-    margin-top: 0;
-}
-
-.groupTwo{
-    width: 25%;
-    float: left;
-    padding-top: 2%;
-    line-height: 2.2rem;
-    display: block;
-    list-style: none;
-}
-
-.groupTwo .topSection, .bottomSection {
-    list-style-type: none;
-}
-
-.groupTwo  .topSection li{
-    font-size: 12px;
-    color: white;
-}
-
-.groupTwo .bottomSection li{
-    font-size: 12px;
-    color: white;
-  
-}
-
-.groupThree{
-    width: 25%;
-    color: white;
-    float: left;
-    padding-top: 2%;
-}
-
-.titleBottom{
-    font-size: 12px;
-
-}
-
-.footer-end{
-    border-bottom: 1px solid grey;
-}
-
-.images .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.images .modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-/* The Close Button */
-.images .close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-    </style>
-
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel=”stylesheet” href=”style.css” type=”text/css”> <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+    <link href="style.css" type="text/css" rel="stylesheet"/>
+    <script src="movies.js"></script>
 </head>
 
- <body>
-<div class="project">
-    <div class="allProject">
-        <div class="partFirstTwo">
-    
-            <div class="partFirstTwo-x">
-                <div class="partLogo">
+<body>
+    <div class="project">
+        <div class="allProject">
+            <div class="partFirstTwo">
 
-                </div>
+                <div class="partFirstTwo-x">
+                    <div class="partLogo">
 
-                <div class="partFirst">
-                    <div class="search">
-                        <input class="searchMovies" type="text" placeholder="Search" />
-                        <button class="getMovies w3-margin-left fa fa-search"></button>
+                    </div>
+
+                    <div class="partFirst">
+                        <div class="search">
+                            <input class="searchMovies" type="text" placeholder="Search" />
+                            <button class="getMovies w3-margin-left fa fa-search"></button>
+                        </div>
+                    </div>
+
+                    <div class="partTwo">
+                        <button class="popularMovies">EN POPÜLER FİLMLER</button>
+                    </div>
+
+                    <div class="partThree">
+                        <button class="latestMovies">EN SON ÇIKAN FİLMLER</button>
+                    </div>
+
+                    <div class="partFour">
+                        <button class="topMovies">EN ÇOK İZLENEN FİLMLER</button>
                     </div>
                 </div>
 
-                <div class="partTwo">
-                    <button class="popularMovies">EN POPÜLER FİLMLER</button>
-                </div>
-    
-                <div class="partThree">
-                    <button class="latestMovies">EN SON ÇIKAN FİLMLER</button>
-                </div>
-    
-                <div class="partFour">
-                    <button class="topMovies">EN ÇOK İZLENEN FİLMLER</button>
-                </div>
             </div>
-    
-        </div>
-        <div class="partFirstTop">
-    
-            <div class="partFirstTop-x">
-             
+            <div class="partFirstTop">
+
+                <div class="partFirstTop-x">
+
+                </div>
+
             </div>
-    
         </div>
-    </div>
 
-    <div class="searchMoviesTop" id="deneme1">
+        <div class="searchMoviesTop" id="deneme1">
 
-    </div>
+        </div>
 
-    <div class="top">
+        <div class="top">
 
-    </div>
-    
-    <div class="mask">
+        </div>
+
+        <div class="mask">
             <p class="maskHeader">En Popüler Filmler</p>
-            <ul class="images" >
-                   
-            </ul>
-              <!-- Trigger/Open The Modal -->
-   
-                    <ul class="triggers"></ul>
-                    <span class="control prev">&#10094;</span>
-                    <span class="control next">&#10095;</span>
-    </div>
+            <ul class="images">
 
-    
-    <div class="footer"> 
+            </ul>
+            <!-- Trigger/Open The Modal -->
+
+            <ul class="triggers"></ul>
+            <span class="control prev">&#10094;</span>
+            <span class="control next">&#10095;</span>
+        </div>
+
+
+        <div class="footer">
             <p class="footerHeader">En Çok İzlenen Filmler</p>
             <ul class="ozkan"></ul>
             <ul class="triggersfooter"></ul>
             <span class="control prev-footer">&#10094;</span>
             <span class="control next-footer">&#10095;</span>
-    </div>
+        </div>
 
-    <div class="fragman">
+        <div class="fragman">
 
-    </div>
+        </div>
 
-    <div class="footerSection">
+        <div class="footerSection">
 
-        <div class="groupOne">
+            <div class="groupOne">
 
-            <p class="topSection">En Popüler Filmler</p>
+                <p class="topSection">En Popüler Filmler</p>
                 <div class="seeAllPopular">
 
                 </div>
-            <p class="bottomSection">>>En Popüler Filmleri Görüntüle</p>
-        
-        </div>
+                <p class="bottomSection">>>En Popüler Filmleri Görüntüle</p>
 
-        <div class="groupTwo">
-            <p>Site Index</p>
-            <ul class="topSection">
-                <li>Home</li>
-                <li>Search</li>
-                <li>Coming Soon</li>
-                <li>Top 250 Movies</li>
-                <li>My IMDB</li>
-                <li>Tv Series</li>
-            </ul>
+            </div>
 
-            <ul class="bottomSection">
+            <div class="groupTwo">
+                <p>Site Index</p>
+                <ul class="topSection">
+                    <li>Home</li>
+                    <li>Search</li>
+                    <li>Coming Soon</li>
+                    <li>Top 250 Movies</li>
+                    <li>My IMDB</li>
+                    <li>Tv Series</li>
+                </ul>
+
+                <ul class="bottomSection">
                     <li>Discover</li>
                     <li>Android App</li>
                     <li>Iphone</li>
                     <li>Windows Phone 7</li>
                     <li>Advertising</li>
                     <li>RSS</li>
-            </ul>
-        </div>
-
-        <div class="groupThree">
-            <p class="titleTop">IMDB Social</p>
-            <div class="footer-end">    
-                <p class="titleBottom">At a time when the Vikings reigned, Kainan's ship, a warrior from another world, hit the Scandinavian coast with great force. </p>
-            </div>
-            <div class="footer-end">    
-                <p class="titleBottom">The bloodthirsty Moorwen, who is avenging violence against himself, kills everything that stands in his way.</p>
+                </ul>
             </div>
 
+            <div class="groupThree">
+                <p class="titleTop">IMDB Social</p>
+                <div class="footer-end">
+                    <p class="titleBottom">At a time when the Vikings reigned, Kainan's ship, a warrior from another
+                        world, hit the Scandinavian coast with great force. </p>
+                </div>
+                <div class="footer-end">
+                    <p class="titleBottom">The bloodthirsty Moorwen, who is avenging violence against himself, kills
+                        everything that stands in his way.</p>
+                </div>
+
+            </div>
+
+            <div class="groupFive">
+                <h1>By Selin öykü Nergiz</h1>
+            </div>
         </div>
 
-        <div class="groupFive">
-            <h1>By Selin öykü Nergiz</h1>
-        </div>
-    </div>
-
-    <div class="w3-container">
-        <div id="id01" class="w3-modal">
-            <div class="w3-modal-content">
-                <div class="w3-container">
-                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-                    <div class="w3-iframe"></div>
+        <div class="w3-container">
+            <div id="id01" class="w3-modal">
+                <div class="w3-modal-content">
+                    <div class="w3-container">
+                        <span onclick="document.getElementById('id01').style.display='none'"
+                            class="w3-button w3-display-topright">&times;</span>
+                        <div class="w3-iframe"></div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 
-</div>
-     
- </body>
+</body>
+
 </html>
